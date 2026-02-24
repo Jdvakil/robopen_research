@@ -1,0 +1,4 @@
+[submodule "submodules/franka_pybridge_interfaces"]
+	path = submodules/franka_pybridge_interfaces
+	url = git@github.com:HIRO-group/franka_pybridge_interfaces.git
+	branch = ap/logging
