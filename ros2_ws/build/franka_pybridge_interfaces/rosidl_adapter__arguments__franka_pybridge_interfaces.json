@@ -1,0 +1,11 @@
+{
+  "package_name": "franka_pybridge_interfaces",
+  "non_idl_tuples": [
+    "/home/jaydv/code/robopen_research/ros2_ws/src/franka_pybridge_interfaces:msg/JointDataArray.msg",
+    "/home/jaydv/code/robopen_research/ros2_ws/src/franka_pybridge_interfaces:srv/GetQ.srv",
+    "/home/jaydv/code/robopen_research/ros2_ws/src/franka_pybridge_interfaces:srv/ExecutePlan.srv",
+    "/home/jaydv/code/robopen_research/ros2_ws/src/franka_pybridge_interfaces:srv/ExecutePlanLog.srv",
+    "/home/jaydv/code/robopen_research/ros2_ws/src/franka_pybridge_interfaces:srv/OperateSuction.srv",
+    "/home/jaydv/code/robopen_research/ros2_ws/src/franka_pybridge_interfaces:srv/SetLoad.srv"
+  ]
+}

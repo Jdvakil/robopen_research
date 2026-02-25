@@ -1,0 +1,18 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from franka_pybridge_interfaces/srv/GetQ.srv
+// generated code does not contain a copyright notice
+
+#include "franka_pybridge_interfaces/msg/JointDataArray.idl"
+
+module franka_pybridge_interfaces {
+  module srv {
+    struct GetQ_Request {
+      uint8 structure_needs_at_least_one_member;
+    };
+    struct GetQ_Response {
+      boolean success;
+
+      franka_pybridge_interfaces::msg::JointDataArray joint_config;
+    };
+  };
+};

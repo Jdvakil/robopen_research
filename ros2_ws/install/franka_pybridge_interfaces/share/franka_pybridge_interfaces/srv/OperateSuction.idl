@@ -1,0 +1,19 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from franka_pybridge_interfaces/srv/OperateSuction.srv
+// generated code does not contain a copyright notice
+
+
+module franka_pybridge_interfaces {
+  module srv {
+    struct OperateSuction_Request {
+      boolean operation;
+
+      int32 sucction_time_ms;
+
+      int32 strength;
+    };
+    struct OperateSuction_Response {
+      boolean success;
+    };
+  };
+};

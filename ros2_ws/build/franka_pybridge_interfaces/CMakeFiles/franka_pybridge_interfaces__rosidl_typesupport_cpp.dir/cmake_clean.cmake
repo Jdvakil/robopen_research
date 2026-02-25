@@ -1,0 +1,27 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/franka_pybridge_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/franka_pybridge_interfaces/msg/joint_data_array__type_support.cpp.o"
+  "CMakeFiles/franka_pybridge_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/franka_pybridge_interfaces/msg/joint_data_array__type_support.cpp.o.d"
+  "CMakeFiles/franka_pybridge_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/franka_pybridge_interfaces/srv/execute_plan__type_support.cpp.o"
+  "CMakeFiles/franka_pybridge_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/franka_pybridge_interfaces/srv/execute_plan__type_support.cpp.o.d"
+  "CMakeFiles/franka_pybridge_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/franka_pybridge_interfaces/srv/execute_plan_log__type_support.cpp.o"
+  "CMakeFiles/franka_pybridge_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/franka_pybridge_interfaces/srv/execute_plan_log__type_support.cpp.o.d"
+  "CMakeFiles/franka_pybridge_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/franka_pybridge_interfaces/srv/get_q__type_support.cpp.o"
+  "CMakeFiles/franka_pybridge_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/franka_pybridge_interfaces/srv/get_q__type_support.cpp.o.d"
+  "CMakeFiles/franka_pybridge_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/franka_pybridge_interfaces/srv/operate_suction__type_support.cpp.o"
+  "CMakeFiles/franka_pybridge_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/franka_pybridge_interfaces/srv/operate_suction__type_support.cpp.o.d"
+  "CMakeFiles/franka_pybridge_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/franka_pybridge_interfaces/srv/set_load__type_support.cpp.o"
+  "CMakeFiles/franka_pybridge_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/franka_pybridge_interfaces/srv/set_load__type_support.cpp.o.d"
+  "libfranka_pybridge_interfaces__rosidl_typesupport_cpp.pdb"
+  "libfranka_pybridge_interfaces__rosidl_typesupport_cpp.so"
+  "rosidl_typesupport_cpp/franka_pybridge_interfaces/msg/joint_data_array__type_support.cpp"
+  "rosidl_typesupport_cpp/franka_pybridge_interfaces/srv/execute_plan__type_support.cpp"
+  "rosidl_typesupport_cpp/franka_pybridge_interfaces/srv/execute_plan_log__type_support.cpp"
+  "rosidl_typesupport_cpp/franka_pybridge_interfaces/srv/get_q__type_support.cpp"
+  "rosidl_typesupport_cpp/franka_pybridge_interfaces/srv/operate_suction__type_support.cpp"
+  "rosidl_typesupport_cpp/franka_pybridge_interfaces/srv/set_load__type_support.cpp"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/franka_pybridge_interfaces__rosidl_typesupport_cpp.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

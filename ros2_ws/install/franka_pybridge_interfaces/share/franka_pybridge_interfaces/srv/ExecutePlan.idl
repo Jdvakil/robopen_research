@@ -1,0 +1,18 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from franka_pybridge_interfaces/srv/ExecutePlan.srv
+// generated code does not contain a copyright notice
+
+#include "franka_pybridge_interfaces/msg/JointDataArray.idl"
+
+module franka_pybridge_interfaces {
+  module srv {
+    struct ExecutePlan_Request {
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> vel_traj;
+
+      franka_pybridge_interfaces::msg::JointDataArray initial_pos;
+    };
+    struct ExecutePlan_Response {
+      boolean success;
+    };
+  };
+};

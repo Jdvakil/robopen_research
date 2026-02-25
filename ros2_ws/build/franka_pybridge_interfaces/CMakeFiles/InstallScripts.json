@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/jaydv/code/robopen_research/ros2_ws/build/franka_pybridge_interfaces/cmake_install.cmake",
+		"/home/jaydv/code/robopen_research/ros2_ws/build/franka_pybridge_interfaces/franka_pybridge_interfaces__py/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

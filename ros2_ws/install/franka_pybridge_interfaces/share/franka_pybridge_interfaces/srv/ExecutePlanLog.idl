@@ -1,0 +1,100 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from franka_pybridge_interfaces/srv/ExecutePlanLog.srv
+// generated code does not contain a copyright notice
+
+#include "franka_pybridge_interfaces/msg/JointDataArray.idl"
+
+module franka_pybridge_interfaces {
+  module srv {
+    struct ExecutePlanLog_Request {
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> vel_traj;
+
+      franka_pybridge_interfaces::msg::JointDataArray initial_pos;
+    };
+    struct ExecutePlanLog_Response {
+      boolean success;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> o_t_ee;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> o_t_ee_d;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> f_t_ee;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> f_t_ne;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> ne_t_ee;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> ee_t_k;
+
+      franka_pybridge_interfaces::msg::JointDataArray m_ee;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> i_ee;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> f_x_cee;
+
+      franka_pybridge_interfaces::msg::JointDataArray m_load;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> i_load;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> f_x_cload;
+
+      franka_pybridge_interfaces::msg::JointDataArray m_total;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> i_total;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> f_x_ctotal;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> elbow;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> elbow_d;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> elbow_c;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> delbow_c;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> ddelbow_c;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> tau_j;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> tau_j_d;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> dtau_j;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> q;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> q_d;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> dq;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> dq_d;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> ddq_d;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> joint_contact;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> cartesian_contact;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> joint_collision;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> cartesian_collision;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> tau_ext_hat_filtered;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> o_f_ext_hat_k;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> k_f_ext_hat_k;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> o_dp_ee_d;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> o_t_ee_c;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> o_dp_ee_c;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> o_ddp_ee_c;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> theta;
+
+      sequence<franka_pybridge_interfaces::msg::JointDataArray> dtheta;
+    };
+  };
+};

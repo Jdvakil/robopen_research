@@ -1,0 +1,233 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-47884c4372fb5a7fe157.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.12"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17
+					]
+				},
+				{
+					"build" : "franka_pybridge_interfaces__py",
+					"jsonFile" : "directory-franka_pybridge_interfaces__py-4f52ebc96665e3f911da.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.12"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "/home/jaydv/code/robopen_research/ros2_ws/build/franka_pybridge_interfaces/franka_pybridge_interfaces__py",
+					"targetIndexes" : 
+					[
+						4
+					]
+				}
+			],
+			"name" : "",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1
+					],
+					"name" : "franka_pybridge_interfaces",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ament_cmake_python_build_franka_pybridge_interfaces_egg::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ament_cmake_python_build_franka_pybridge_interfaces_egg-b2b5528bb17f7211317a.json",
+					"name" : "ament_cmake_python_build_franka_pybridge_interfaces_egg",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ament_cmake_python_copy_franka_pybridge_interfaces::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ament_cmake_python_copy_franka_pybridge_interfaces-3769ffe5fa075ad9998b.json",
+					"name" : "ament_cmake_python_copy_franka_pybridge_interfaces",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "franka_pybridge_interfaces::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-franka_pybridge_interfaces-5be63f2d76451f9262fe.json",
+					"name" : "franka_pybridge_interfaces",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "franka_pybridge_interfaces__cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-franka_pybridge_interfaces__cpp-66bd7330e46863a465ba.json",
+					"name" : "franka_pybridge_interfaces__cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "franka_pybridge_interfaces__py::@6a943996ba0408686f71",
+					"jsonFile" : "target-franka_pybridge_interfaces__py-cf8a08cbcf2656b37600.json",
+					"name" : "franka_pybridge_interfaces__py",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "franka_pybridge_interfaces__rosidl_generator_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-franka_pybridge_interfaces__rosidl_generator_c-4a21ac90ee37363e0818.json",
+					"name" : "franka_pybridge_interfaces__rosidl_generator_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "franka_pybridge_interfaces__rosidl_generator_py::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-franka_pybridge_interfaces__rosidl_generator_py-ab0f95cab90fbc4ffd97.json",
+					"name" : "franka_pybridge_interfaces__rosidl_generator_py",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "franka_pybridge_interfaces__rosidl_typesupport_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-franka_pybridge_interfaces__rosidl_typesupport_c-bce516d67af30c24ac42.json",
+					"name" : "franka_pybridge_interfaces__rosidl_typesupport_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "franka_pybridge_interfaces__rosidl_typesupport_c__pyext::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-franka_pybridge_interfaces__rosidl_typesupport_c__pyext-c336690d2d6a92e516b9.json",
+					"name" : "franka_pybridge_interfaces__rosidl_typesupport_c__pyext",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "franka_pybridge_interfaces__rosidl_typesupport_cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-franka_pybridge_interfaces__rosidl_typesupport_cpp-699745472b82e29ba954.json",
+					"name" : "franka_pybridge_interfaces__rosidl_typesupport_cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "franka_pybridge_interfaces__rosidl_typesupport_fastrtps_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-franka_pybridge_interfaces__rosidl_typesupport_fastrtps_c-b577365b74dae5ddbc3b.json",
+					"name" : "franka_pybridge_interfaces__rosidl_typesupport_fastrtps_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "franka_pybridge_interfaces__rosidl_typesupport_fastrtps_c__pyext::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-franka_pybridge_interfaces__rosidl_typesupport_fastrtps_c__pyext-06d20ba0c81e83c90835.json",
+					"name" : "franka_pybridge_interfaces__rosidl_typesupport_fastrtps_c__pyext",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "franka_pybridge_interfaces__rosidl_typesupport_fastrtps_cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-franka_pybridge_interfaces__rosidl_typesupport_fastrtps_cpp-1988566a63685fa22b42.json",
+					"name" : "franka_pybridge_interfaces__rosidl_typesupport_fastrtps_cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "franka_pybridge_interfaces__rosidl_typesupport_introspection_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-franka_pybridge_interfaces__rosidl_typesupport_introspection_c-f802e4b713b79fb7115e.json",
+					"name" : "franka_pybridge_interfaces__rosidl_typesupport_introspection_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "franka_pybridge_interfaces__rosidl_typesupport_introspection_c__pyext::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-franka_pybridge_interfaces__rosidl_typesupport_introspection_c__pyext-49c3352298425efff07e.json",
+					"name" : "franka_pybridge_interfaces__rosidl_typesupport_introspection_c__pyext",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "franka_pybridge_interfaces__rosidl_typesupport_introspection_cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-franka_pybridge_interfaces__rosidl_typesupport_introspection_cpp-d12a561bc813bc337a16.json",
+					"name" : "franka_pybridge_interfaces__rosidl_typesupport_introspection_cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "franka_pybridge_interfaces_uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-franka_pybridge_interfaces_uninstall-517bfe8756f360cfb95f.json",
+					"name" : "franka_pybridge_interfaces_uninstall",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-uninstall-c461bf89f6daf3da429a.json",
+					"name" : "uninstall",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/jaydv/code/robopen_research/ros2_ws/build/franka_pybridge_interfaces",
+		"source" : "/home/jaydv/code/robopen_research/ros2_ws/src/franka_pybridge_interfaces"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 8
+	}
+}

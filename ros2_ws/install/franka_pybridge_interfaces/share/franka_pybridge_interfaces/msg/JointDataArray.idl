@@ -1,0 +1,12 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from franka_pybridge_interfaces/msg/JointDataArray.msg
+// generated code does not contain a copyright notice
+
+
+module franka_pybridge_interfaces {
+  module msg {
+    struct JointDataArray {
+      sequence<double> data;
+    };
+  };
+};

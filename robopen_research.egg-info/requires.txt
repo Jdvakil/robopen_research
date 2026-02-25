@@ -1,0 +1,4 @@
+numpy
+h5py
+rclpy
+franka_pybridge_interfaces

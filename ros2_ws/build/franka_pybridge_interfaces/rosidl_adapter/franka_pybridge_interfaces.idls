@@ -1,0 +1,6 @@
+/home/jaydv/code/robopen_research/ros2_ws/build/franka_pybridge_interfaces/rosidl_adapter/franka_pybridge_interfaces:msg/JointDataArray.idl
+/home/jaydv/code/robopen_research/ros2_ws/build/franka_pybridge_interfaces/rosidl_adapter/franka_pybridge_interfaces:srv/GetQ.idl
+/home/jaydv/code/robopen_research/ros2_ws/build/franka_pybridge_interfaces/rosidl_adapter/franka_pybridge_interfaces:srv/ExecutePlan.idl
+/home/jaydv/code/robopen_research/ros2_ws/build/franka_pybridge_interfaces/rosidl_adapter/franka_pybridge_interfaces:srv/ExecutePlanLog.idl
+/home/jaydv/code/robopen_research/ros2_ws/build/franka_pybridge_interfaces/rosidl_adapter/franka_pybridge_interfaces:srv/OperateSuction.idl
+/home/jaydv/code/robopen_research/ros2_ws/build/franka_pybridge_interfaces/rosidl_adapter/franka_pybridge_interfaces:srv/SetLoad.idl

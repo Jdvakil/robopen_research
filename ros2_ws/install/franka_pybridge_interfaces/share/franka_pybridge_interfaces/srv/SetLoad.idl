@@ -1,0 +1,15 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from franka_pybridge_interfaces/srv/SetLoad.srv
+// generated code does not contain a copyright notice
+
+
+module franka_pybridge_interfaces {
+  module srv {
+    struct SetLoad_Request {
+      double mass;
+    };
+    struct SetLoad_Response {
+      boolean success;
+    };
+  };
+};
