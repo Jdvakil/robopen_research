@@ -33,7 +33,6 @@ import time
 from typing import List
 
 import numpy as np
-import rclpy
 
 # Make sure the package root is on sys.path when running as a module.
 _HERE = os.path.dirname(os.path.abspath(__file__))
@@ -41,17 +40,25 @@ _ROOT = os.path.abspath(os.path.join(_HERE, "../.."))
 if _ROOT not in sys.path:
     sys.path.insert(0, _ROOT)
 
+# Pure math symbols – always importable (no ROS2 / cuRobo required).
 from scripts.utils.curobo_velocity_controller import (
     CONTROL_DT,
     JOINT_VEL_MAX,
     JOINT_ACC_MAX,
     VEL_LIMIT,
     ACC_LIMIT,
-    CuRoboVelocityController,
     diagnose_velocity_profile,
     smooth_velocity_profile,
     validate_and_clip_velocity,
 )
+
+# ROS2-dependent symbol – only imported for integration test.
+try:
+    import rclpy
+    from scripts.utils.curobo_velocity_controller import CuRoboVelocityController
+    _ROS_AVAILABLE = True
+except ImportError:
+    _ROS_AVAILABLE = False
 
 # ─── Presets ──────────────────────────────────────────────────────────────────
 
@@ -193,25 +200,57 @@ def test_zero_boundary_condition() -> bool:
 
 
 def test_acceleration_limit() -> bool:
-    """Verify that conditioned velocities satisfy the acceleration limit."""
+    """Verify that conditioned velocities satisfy the acceleration limit.
+
+    Two sub-cases:
+      A) Smooth cuRobo-like profile (quintic sinusoidal bell): should pass
+         with zero violations at effectively exact precision.
+      B) Adversarial rectangular pulse (worst-case internal jump): the
+         forward-backward clip must bring every implied acceleration within
+         one ULP of acc_limit (no violations > limit + 1e-9 rad/s²).
+    """
     print("\n[unit] test_acceleration_limit …")
 
-    # Worst-case: step function (infinite raw acceleration)
-    T = 500
-    raw = np.zeros((T, 7))
-    raw[T // 4 : 3 * T // 4] = 0.3  # rectangular pulse
+    # Tolerance for floating-point comparison: one ULP of the largest acc limit
+    _ACC_TOL = np.finfo(float).eps * max(ACC_LIMIT) * 16
 
-    conditioned = smooth_velocity_profile(raw)
-    conditioned = validate_and_clip_velocity(conditioned, verbose=False)
+    all_ok = True
 
-    acc = np.diff(conditioned, axis=0) / CONTROL_DT  # (T-1, 7)
-    max_acc = np.max(np.abs(acc), axis=0)
-    violations = (max_acc > ACC_LIMIT).any()
-    print(f"  max |acc| = {max_acc.round(2)}")
-    print(f"  limit     = {ACC_LIMIT}")
-    result = "PASS" if not violations else "FAIL"
-    print(f"  acc limit check → {result}")
-    return not violations
+    # ── Sub-case A: smooth quintic-like profile (representative of cuRobo) ───
+    T = 800
+    t = np.linspace(0.0, np.pi, T)
+    # Bell-shaped velocity with amplitude safely below vel limit
+    amp = np.array([0.8, 0.5, 0.7, 0.9, 0.8, 0.7, 0.6]) * VEL_LIMIT
+    raw_smooth = np.outer(np.sin(t), amp)  # (T, 7) – already 0 at endpoints
+
+    cond_a = smooth_velocity_profile(raw_smooth)
+    cond_a = validate_and_clip_velocity(cond_a, verbose=False)
+    acc_a = np.diff(cond_a, axis=0) / CONTROL_DT
+    max_acc_a = np.max(np.abs(acc_a), axis=0)
+    viols_a = (max_acc_a > ACC_LIMIT + _ACC_TOL).any()
+    print(f"  [A] smooth profile  max |acc| = {max_acc_a.round(3)}")
+    print(f"      limit                     = {ACC_LIMIT}")
+    print(f"      result → {'PASS' if not viols_a else 'FAIL'}")
+    all_ok = all_ok and (not viols_a)
+
+    # ── Sub-case B: rectangular pulse (adversarial: step at interior point) ──
+    T2 = 500
+    raw_step = np.zeros((T2, 7))
+    raw_step[T2 // 4 : 3 * T2 // 4] = 0.3
+
+    cond_b = smooth_velocity_profile(raw_step)
+    cond_b = validate_and_clip_velocity(cond_b, verbose=False)
+    acc_b = np.diff(cond_b, axis=0) / CONTROL_DT
+    max_acc_b = np.max(np.abs(acc_b), axis=0)
+    # Allow _ACC_TOL tolerance for floating-point rounding in A*dt/dt.
+    viols_b = (max_acc_b > ACC_LIMIT + _ACC_TOL).any()
+    print(f"  [B] rect pulse      max |acc| = {max_acc_b.round(3)}")
+    print(f"      limit                     = {ACC_LIMIT}")
+    print(f"      result → {'PASS' if not viols_b else 'FAIL'}")
+    all_ok = all_ok and (not viols_b)
+
+    print(f"  acc limit check → {'PASS' if all_ok else 'FAIL'}")
+    return all_ok
 
 
 def test_velocity_limit() -> bool:
@@ -268,6 +307,11 @@ def main() -> int:
         print("[test] Start q : will query robot via /get_q")
 
     # ── ROS2 integration test ─────────────────────────────────────────────────
+    if not _ROS_AVAILABLE:
+        print("\n[test] ROS2 / cuRobo / franka_pybridge not available – skipping integration test.")
+        print("[test] Unit tests passed.  Source the ROS2 workspace to run the full test.")
+        return 0
+
     rclpy.init()
 
     try:

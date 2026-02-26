@@ -54,21 +54,30 @@ from __future__ import annotations
 from typing import List, Optional, Tuple
 
 import numpy as np
-import rclpy
-from rclpy.node import Node
 from scipy.signal import savgol_filter
-import torch
 
-from franka_pybridge_interfaces.msg import JointDataArray
-from franka_pybridge_interfaces.srv import ExecutePlan, GetQ
-from curobo.types.math import Pose
-from curobo.types.robot import JointState
-from curobo.util_file import get_robot_configs_path, join_path, load_yaml
-from curobo.wrap.reacher.motion_gen import (
-    MotionGen,
-    MotionGenConfig,
-    MotionGenPlanConfig,
-)
+# ── ROS2 / cuRobo / torch: optional, deferred until node instantiation ────────
+# Keeping these out of module-level scope lets the pure math functions
+# (smooth_velocity_profile, validate_and_clip_velocity, diagnose_velocity_profile)
+# be imported and tested without a live ROS2 stack or a CUDA GPU.
+try:
+    import rclpy
+    from rclpy.node import Node as _NodeBase
+    from franka_pybridge_interfaces.msg import JointDataArray
+    from franka_pybridge_interfaces.srv import ExecutePlan, GetQ
+    from curobo.types.math import Pose
+    from curobo.types.robot import JointState
+    from curobo.util_file import get_robot_configs_path, join_path, load_yaml
+    from curobo.wrap.reacher.motion_gen import (
+        MotionGen,
+        MotionGenConfig,
+        MotionGenPlanConfig,
+    )
+    import torch
+    _ROS_AVAILABLE = True
+except ImportError:
+    _NodeBase = object          # fallback base so the class definition succeeds
+    _ROS_AVAILABLE = False
 
 # ─── FR3 hardware limits ──────────────────────────────────────────────────────
 # Source: https://frankaemika.github.io/docs/control_parameters (Franka FR3)
@@ -115,9 +124,6 @@ RAMP_DURATION: float = 0.20  # s  (= 200 samples at 1 kHz)
 # Set SG_WINDOW = 0 to disable filtering entirely.
 SG_WINDOW: int = 11   # must be odd; 0 = disabled
 SG_POLYORDER: int = 3
-
-# Maximum iterations for the iterative acceleration-limiting pass.
-_ACC_SMOOTH_MAX_ITER: int = 100
 
 
 # ─── Pure helper functions (no ROS dependency) ────────────────────────────────
@@ -232,25 +238,37 @@ def validate_and_clip_velocity(
         worst_ratio = float(np.max(np.abs(acc) / acc_limit[None, :]))
         print(
             f"[CuRoboCtrl] WARNING: acceleration limit exceeded "
-            f"(peak ratio {worst_ratio:.3f}x), applying iterative smoothing."
+            f"(peak ratio {worst_ratio:.3f}x), applying forward-backward acc clip."
         )
 
-    for iteration in range(_ACC_SMOOTH_MAX_ITER):
-        acc = np.diff(vel, axis=0) / dt
-        if not (np.abs(acc) > acc_limit[None, :]).any():
-            break
-        # 3-point weighted average – preserves boundary zeros.
-        vel_smooth = vel.copy()
-        vel_smooth[1:-1] = (
-            0.25 * vel[:-2] + 0.50 * vel[1:-1] + 0.25 * vel[2:]
-        )
-        vel = vel_smooth
+    # Forward-backward acceleration clip (O(T) algorithm).
+    # Guarantees |vel[k+1] - vel[k]| / dt <= acc_limit for all k, regardless
+    # of how severe the input violations are.  Unlike iterative averaging, this
+    # converges in exactly 2 passes and never needs a loop.
+    #
+    # Forward pass: limit how fast velocity can RISE from left to right.
+    # Step slightly below acc_limit * dt so that floating-point rounding in
+    # the division  (clipped_delta / dt)  never produces a value that exceeds
+    # acc_limit by a machine-epsilon residual.
+    dv_max = np.nextafter(acc_limit * dt, 0.0)  # one ULP below the limit
+    vel_fwd = vel.copy()
+    for k in range(1, len(vel)):
+        delta = vel_fwd[k] - vel_fwd[k - 1]
+        vel_fwd[k] = vel_fwd[k - 1] + np.clip(delta, -dv_max, dv_max)
 
-    # Re-enforce strict boundary zeros after smoothing.
-    vel[0] = 0.0
-    vel[-1] = 0.0
+    # Backward pass: limit how fast velocity can FALL from right to left.
+    # This corrects overshoot introduced by the forward pass without
+    # re-introducing forward-direction violations.
+    vel_out = vel_fwd.copy()
+    for k in range(len(vel) - 2, -1, -1):
+        delta = vel_out[k] - vel_out[k + 1]
+        vel_out[k] = vel_out[k + 1] + np.clip(delta, -dv_max, dv_max)
 
-    return vel
+    # Re-enforce strict boundary zeros.
+    vel_out[0] = 0.0
+    vel_out[-1] = 0.0
+
+    return vel_out
 
 
 def diagnose_velocity_profile(
@@ -258,6 +276,7 @@ def diagnose_velocity_profile(
     dt: float = CONTROL_DT,
     vel_limit: np.ndarray = VEL_LIMIT,
     acc_limit: np.ndarray = ACC_LIMIT,
+    tol: float = 1e-9,
 ) -> dict:
     """Return a diagnostic summary of a velocity profile.
 
@@ -266,6 +285,9 @@ def diagnose_velocity_profile(
     Parameters
     ----------
     velocities : (T, 7) velocity array [rad/s].
+    tol        : Relative tolerance added to each limit before the violation
+                 check.  The default (1e-9) absorbs floating-point residuals
+                 that arise from ``acc_limit * dt / dt`` rounding.
 
     Returns
     -------
@@ -282,17 +304,20 @@ def diagnose_velocity_profile(
     T, _ = velocities.shape
     acc = np.diff(velocities, axis=0) / dt  # (T-1, 7)
 
+    vel_thr = vel_limit * (1.0 + tol)
+    acc_thr = acc_limit * (1.0 + tol)
+
     vel_viols = [
         (t, j, float(velocities[t, j]))
         for t in range(T)
         for j in range(NUM_JOINTS)
-        if abs(velocities[t, j]) > vel_limit[j]
+        if abs(velocities[t, j]) > vel_thr[j]
     ]
     acc_viols = [
         (t, j, float(acc[t, j]))
         for t in range(T - 1)
         for j in range(NUM_JOINTS)
-        if abs(acc[t, j]) > acc_limit[j]
+        if abs(acc[t, j]) > acc_thr[j]
     ]
 
     return {
@@ -307,8 +332,14 @@ def diagnose_velocity_profile(
     }
 
 
-def _to_jda(data: np.ndarray) -> JointDataArray:
-    """Convert a (7,) numpy array to a ``JointDataArray`` ROS2 message."""
+def _to_jda(data: np.ndarray):
+    """Convert a (7,) numpy array to a ``JointDataArray`` ROS2 message.
+
+    Only callable when ``_ROS_AVAILABLE`` is True (i.e. when the full
+    franka_pybridge_interfaces package is installed and sourced).
+    """
+    if not _ROS_AVAILABLE:
+        raise RuntimeError("_to_jda requires franka_pybridge_interfaces (ROS2).")
     jda = JointDataArray()
     jda.data = [float(v) for v in data]
     return jda
@@ -316,7 +347,7 @@ def _to_jda(data: np.ndarray) -> JointDataArray:
 
 # ─── Main controller node ─────────────────────────────────────────────────────
 
-class CuRoboVelocityController(Node):
+class CuRoboVelocityController(_NodeBase):
     """ROS2 node: plans with CuRobo, conditions velocities, executes on FR3.
 
     The node wraps three components:
@@ -343,6 +374,12 @@ class CuRoboVelocityController(Node):
         use_sg_filter: bool = True,
         verbose: bool = True,
     ) -> None:
+        if not _ROS_AVAILABLE:
+            raise RuntimeError(
+                "CuRoboVelocityController requires rclpy, franka_pybridge_interfaces, "
+                "curobo, and torch.  Install them and source the ROS2 workspace before "
+                "instantiating this class."
+            )
         super().__init__("curobo_velocity_controller")
         self._verbose = verbose
 
