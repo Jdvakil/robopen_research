@@ -332,6 +332,72 @@ def diagnose_velocity_profile(
     }
 
 
+def condition_policy_positions(
+    q_traj: np.ndarray,
+    dt: float,
+    ramp_duration: float = RAMP_DURATION,
+    sg_window: int = SG_WINDOW,
+    sg_polyorder: int = SG_POLYORDER,
+) -> np.ndarray:
+    """Convert a learned policy's joint position sequence to conditioned velocities.
+
+    Differentiates the position trajectory to obtain velocities, then runs the
+    full conditioning pipeline (SG smoothing + cosine ramps + acc clip).  The
+    result is safe to send directly to ``/execute_plan``.
+
+    This is the correct integration point for ACT, Diffusion Policy, and other
+    learned policies that output joint positions at a fixed frequency.
+
+    Parameters
+    ----------
+    q_traj      : (T, 7) joint position trajectory from the policy [rad].
+                  ACT typically runs at 50 Hz → dt = 0.02 s.
+                  Diffusion Policy at 10 Hz → dt = 0.10 s.
+    dt          : Timestep between consecutive policy waypoints [s].
+    ramp_duration : Cosine ramp length at trajectory start/end [s].
+    sg_window   : Savitzky-Golay window (0 = disabled).
+    sg_polyorder: Savitzky-Golay polynomial order.
+
+    Returns
+    -------
+    vel_conditioned : (T, 7) conditioned joint velocities [rad/s].
+
+    Example
+    -------
+    ::
+
+        # ACT inference loop
+        act_positions = policy.predict(observation)      # (H, 7) at 50 Hz
+        vel = condition_policy_positions(act_positions, dt=1/50)
+        # Send to robot via the ROS2 service (requires franka_pybridge)
+        vel_jda = [_to_jda(v) for v in vel]
+        req.vel_traj = vel_jda
+        req.initial_pos = _to_jda(current_q)
+        exec_client.call_async(req)
+    """
+    q_traj = np.asarray(q_traj, dtype=np.float64)
+    if q_traj.ndim != 2 or q_traj.shape[1] != NUM_JOINTS:
+        raise ValueError(
+            f"q_traj must be (T, {NUM_JOINTS}), got {q_traj.shape}"
+        )
+
+    # Numerical differentiation via central differences (matches np.gradient behaviour).
+    # Central differences give O(dt²) accuracy vs. O(dt) for forward differences.
+    velocities = np.gradient(q_traj, dt, axis=0)
+
+    # Enforce exact zero at boundaries (np.gradient may leave small residuals).
+    velocities[0] = 0.0
+    velocities[-1] = 0.0
+
+    # Run the full conditioning pipeline.
+    vel = smooth_velocity_profile(
+        velocities, dt=dt, ramp_duration=ramp_duration,
+        sg_window=sg_window, sg_polyorder=sg_polyorder,
+    )
+    vel = validate_and_clip_velocity(vel, dt=dt, verbose=True)
+    return vel
+
+
 def _to_jda(data: np.ndarray):
     """Convert a (7,) numpy array to a ``JointDataArray`` ROS2 message.
 
