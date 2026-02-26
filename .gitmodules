@@ -2,3 +2,9 @@
 	path = ros2_ws/src/franka_pybridge_interfaces
 	url = git@github.com:HIRO-group/franka_pybridge_interfaces.git
 	branch = ap/logging
+
+
+[submodule "ros2_ws/src/franka_pybridge"]
+	path = ros2_ws/src/franka_pybridge
+	url = git@github.com:HIRO-group/franka_pybridge.git
+	branch = gb/fr3
